@@ -1,3 +1,5 @@
+package Poker;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -19,40 +21,57 @@ public class Barajas {
         Carta[] shuffleCarts = revolverCartas(unionArreglos);
 
         Carta[] distributeCarts = new Carta[7];
-        distributeCarts[0] = new Carta("Negro", "Picas", 10, "5");
-        distributeCarts[1] = new Carta("Negro", "Picas", 9, "4");
-        distributeCarts[2] = new Carta("Negro", "Picas", 8, "8");
-        distributeCarts[3] = new Carta("Negro", "Picas", 7, "2");
-        distributeCarts[4] = new Carta("Negro", "Picas", 6, "K");
-        distributeCarts[5] = new Carta("Rojo", "Picas", 1, "10");
-        distributeCarts[6] = new Carta("Rojo", "Picas", 3, "3");
+        distributeCarts[0] = new Carta("Rojo", "Diamantes", 10, "8");
+        distributeCarts[1] = new Carta("Rojo", "Corazones", 6, "7");
+        distributeCarts[2] = new Carta("Negro", "Picas", 8, "K");
+        distributeCarts[3] = new Carta("Negro", "Trevoles", 7, "A");
+        distributeCarts[4] = new Carta("Rojo", "Corazones", 6, "2");
+        distributeCarts[5] = new Carta("Negro", "Trevoles", 1, "4");
+        distributeCarts[6] = new Carta("Rojo", "Picas", 3, "4");
 
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
         //boolean escReaCol = escaleraRealColor(distributeCarts);
         //System.out.println(escReaCol);
-
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
-        boolean escRea = escaleraReal(distributeCarts);
-        System.out.println(escRea);
-
+        //boolean escRea = escaleraReal(distributeCarts);
+        //System.out.println(escRea);
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
-        boolean pok = poker(distributeCarts);
-        System.out.println(pok);
-
+        //boolean pok = poker(distributeCarts);
+        //System.out.println(pok);
+        
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
-        boolean ful = full(distributeCarts);
-        System.out.println(ful);
-
+        //boolean ful = full(distributeCarts);
+        //System.out.println(ful);
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
-        boolean col = color(distributeCarts);
-        System.out.println(col);
+        //boolean col = color(distributeCarts);
+        //System.out.println(col);
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
+
+        //boolean esc = escalera(distributeCarts);
+        //System.out.println(esc);
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
+
+        //boolean tri = trio(distributeCarts);
+        //System.out.println(tri);
+        
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
+
+        //boolean dob = doblesParejas(distributeCarts);
+        //System.out.println(dob);
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
+
+        //boolean par = parejas(distributeCarts);
+        //System.out.println(par);
 
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
+        
+        boolean car = cartaAlta(distributeCarts);
+        System.out.println(car);
     }
 
     public static Carta[] crearPalo(String tipo, String color) {
@@ -257,62 +276,55 @@ public class Barajas {
     public static boolean escaleraReal(Carta[] distributeCarts) {
         String[] escaleraRealAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
         boolean validador = false;
-        String colorAux = "";
-        String tipoAux = "";
-        String[] escReaAux = new String [13];
+        String[] escReaAux = new String[13];
+        int contador = 0;
 
         for (int i = 0; i < escaleraRealAux.length; i++) {
 
             for (int j = 0; j < distributeCarts.length; j++) {
-                
+
                 if (escaleraRealAux[i] == distributeCarts[j].getValorTexto()) {
                     escReaAux[i] = escaleraRealAux[i];
-                    
-                } 
+
+                }
             }
         }
-        int contador = 0;
+
         for (int i = 0; i < escReaAux.length; i++) {
             if (escReaAux[i] != null) {
                 contador++;
-                
-            }else{
+
+            } else {
                 contador = 0;
             }
-            
+
             if (contador == 5) {
                 validador = true;
                 break;
             }
-            
+
         }
         return validador;
 
     }
 
     public static boolean poker(Carta[] distributeCarts) {
-        String[] pokerAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-        boolean validador = true;
+        boolean datosRepetidos = false;
 
-        for (int i = 0; i < pokerAux.length; i++) {
+        for (int i = 0; i < distributeCarts.length; i++) {
 
-            for (int j = 0; j < distributeCarts.length - 3; j++) {
-
-                if (pokerAux[i] == distributeCarts[j].getValorTexto()) {
-                    System.out.println("Las siguiente carta pertenece a un poker:");
-                    System.out.println("La carta es: " + distributeCarts[j]);
-
-                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    validador = true;
+            for (int j = i + 3; j < distributeCarts.length; j++) {
+                if (distributeCarts[i].getValorTexto() == distributeCarts[j].getValorTexto()) {
+                    datosRepetidos = true;
                 } else {
-                    validador = false;
-
+                    return datosRepetidos;
                 }
-
             }
 
         }
-        return validador;
+
+        System.out.println(datosRepetidos);
+        return datosRepetidos;
 
     }
 
@@ -321,37 +333,22 @@ public class Barajas {
         boolean validador = true;
 
         for (int i = 0; i < fullAux.length; i++) {
-
-            for (int j = 0; j < distributeCarts.length - 4; j++) {
-
+            for (int j = i + 2; j < distributeCarts.length; j++) {
                 if (fullAux[i] == distributeCarts[j].getValorTexto()) {
-                    System.out.println("Las siguiente carta pertenece a un full:");
-                    System.out.println("La carta es: " + distributeCarts[j]);
-
-                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    validador = true;
+                    return validador;
                 } else {
                     validador = false;
-
                 }
-
             }
-            for (int k = 3; k < distributeCarts.length - 2; k++) {
-
-                if (fullAux[i] == distributeCarts[k].getValorTexto()) {
-                    System.out.println("Las siguiente carta pertenece a un full:");
-                    System.out.println("La carta es: " + distributeCarts[k]);
-
-                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    validador = true;
+            for (int j = i + 3; j < distributeCarts.length; j++) {
+                if (fullAux[i] == distributeCarts[j].getValorTexto()) {
+                    return validador;
                 } else {
                     validador = false;
-
                 }
             }
         }
         return validador;
-
     }
 
     public static boolean color(Carta[] distributeCarts) {
@@ -371,6 +368,155 @@ public class Barajas {
 
         return true;
 
+    }
+
+    public static boolean escalera(Carta[] distributeCarts) {
+        String[] escaleraAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        boolean validador = false;
+        String[] escAux = new String[13];
+        int contador = 0;
+
+        for (int i = 0; i < escaleraAux.length; i++) {
+
+            for (int j = 0; j < distributeCarts.length; j++) {
+
+                if (escaleraAux[i] == distributeCarts[j].getValorTexto()) {
+                    escAux[i] = escaleraAux[i];
+
+                }
+            }
+        }
+
+        for (int i = 0; i < escAux.length; i++) {
+            if (escAux[i] != null) {
+                contador++;
+
+            } else {
+                contador = 0;
+            }
+
+            if (contador == 5) {
+                validador = true;
+                break;
+            }
+
+        }
+        return validador;
+
+    }
+
+    public static boolean trio(Carta[] distributeCarts) {
+        boolean validador = false;
+
+        for (int i = 0; i < distributeCarts.length; i++) {
+            for (int j = i + 2; j < distributeCarts.length; j++) {
+                if (distributeCarts[i].getValorTexto() == distributeCarts[j].getValorTexto()) {
+                    validador = true;
+                } else {
+                    return validador;
+                }
+            }
+        }
+        return validador;
+
+    }
+
+    public static boolean doblesParejas(Carta[] distributeCarts) {
+        String[] doblesParejasAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        boolean validador = true;
+
+        for (int i = 0; i < doblesParejasAux.length; i++) {
+            for (int j = i + 2; j < distributeCarts.length; j++) {
+                if (doblesParejasAux[i] == distributeCarts[j].getValorTexto()) {
+                    return validador;
+
+                } else {
+                    break;
+                }
+            }
+            for (int j = i + 2; j < distributeCarts.length; j++) {
+                if (doblesParejasAux[i] == distributeCarts[j].getValorTexto()) {
+                    return validador;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return validador;
+    }
+
+    public static boolean parejas(Carta[] distributeCarts) {
+        String[] parejasAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        boolean validador = true;
+        String colorAux = "";
+
+        for (int i = 0; i < parejasAux.length; i++) {
+
+            if (validador) {
+
+                for (int j = 0; j < distributeCarts.length; j++) {
+
+                    if (parejasAux[i] == distributeCarts[j].getValorTexto()) {
+
+                        if (colorAux == "") {
+                            colorAux = distributeCarts[j].getColor();
+
+                            validador = true;
+                        } else {
+                            if (colorAux == distributeCarts[j].getColor()) {
+                                validador = true;
+
+                            } else {
+                                validador = false;
+                            }
+
+                        }
+                    }
+                }
+
+                System.out.println(validador);
+            }
+        }
+        return validador;
+    }
+
+    public static boolean cartaAlta(Carta[] distributeCarts) {
+        String[] cartaAltaAux = {"K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2", "A"};
+        boolean validador = false;
+        String[] carAltAux = new String[1];
+        int contador = 0;
+
+        for (int i = 0; i < cartaAltaAux.length; i++) {
+
+            for(int j = 0; j < distributeCarts.length; j++) {
+
+                if (cartaAltaAux[i] == distributeCarts[j].getValorTexto()) {
+                    carAltAux[i] = cartaAltaAux[i];
+                    
+                }else{
+                    return validador;
+                }
+
+            }
+        }
+        
+        for (int i = 0; i < carAltAux.length; i++) {
+            if (carAltAux[i] != null) {
+                contador++;
+
+            } else {
+                contador = 0;
+            }
+
+            if (contador == 1) {
+                validador = true;
+                break;
+            }
+
+        }
+
+        return validador;
     }
 
 }
