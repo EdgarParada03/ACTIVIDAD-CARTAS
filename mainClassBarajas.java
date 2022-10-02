@@ -19,16 +19,28 @@ public class Barajas {
         Carta[] crearPalo4 = crearPalo("Pica", "Negro");
         Carta[] unionArreglos = unirArreglos(crearPalo1, crearPalo2, crearPalo3, crearPalo4);
         Carta[] shuffleCarts = revolverCartas(unionArreglos);
-
+        
+        Carta[] distributeCartsPlayer = new Carta[2];
+        distributeCartsPlayer[0] = new Carta("Negro", "Trevoles", 1, "2");
+        distributeCartsPlayer[1] = new Carta("Rojo", "Picas", 3, "3");
+        
+        Carta[] distributeCartsMesa = new Carta[5];
+        distributeCartsMesa[0] = new Carta("Rojo", "Diamantes", 10, "K");
+        distributeCartsMesa[1] = new Carta("Rojo", "Corazones", 6, "Q");
+        distributeCartsMesa[2] = new Carta("Negro", "Picas", 8, "J");
+        distributeCartsMesa[3] = new Carta("Negro", "Trevoles", 7, "10");
+        distributeCartsMesa[4] = new Carta("Rojo", "Corazones", 6, "8");
+        
+        
         Carta[] distributeCarts = new Carta[7];
-        distributeCarts[0] = new Carta("Rojo", "Diamantes", 10, "8");
-        distributeCarts[1] = new Carta("Rojo", "Corazones", 6, "7");
-        distributeCarts[2] = new Carta("Negro", "Picas", 8, "K");
-        distributeCarts[3] = new Carta("Negro", "Trevoles", 7, "A");
-        distributeCarts[4] = new Carta("Rojo", "Corazones", 6, "2");
-        distributeCarts[5] = new Carta("Negro", "Trevoles", 1, "4");
-        distributeCarts[6] = new Carta("Rojo", "Picas", 3, "4");
-
+        distributeCarts[0] = distributeCartsPlayer[0];
+        distributeCarts[1] = distributeCartsPlayer[1];
+        distributeCarts[2] = distributeCartsMesa[0];
+        distributeCarts[3] = distributeCartsMesa[1];
+        distributeCarts[4] = distributeCartsMesa[2];
+        distributeCarts[5] = distributeCartsMesa[3];
+        distributeCarts[6] = distributeCartsMesa[4];
+        
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
         //boolean escReaCol = escaleraRealColor(distributeCarts);
@@ -41,7 +53,6 @@ public class Barajas {
 
         //boolean pok = poker(distributeCarts);
         //System.out.println(pok);
-        
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
         //boolean ful = full(distributeCarts);
@@ -52,8 +63,9 @@ public class Barajas {
         //System.out.println(col);
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
-        //boolean esc = escalera(distributeCarts);
-        //System.out.println(esc);
+        boolean esc = escalera(distributeCarts);
+        System.out.println(esc);
+        
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
         //boolean tri = trio(distributeCarts);
@@ -63,15 +75,16 @@ public class Barajas {
 
         //boolean dob = doblesParejas(distributeCarts);
         //System.out.println(dob);
+
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
 
         //boolean par = parejas(distributeCarts);
         //System.out.println(par);
 
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////");
-        
-        boolean car = cartaAlta(distributeCarts);
-        System.out.println(car);
+
+        //boolean car = cartaAlta(distributeCarts);
+        //System.out.println(car);
     }
 
     public static Carta[] crearPalo(String tipo, String color) {
@@ -375,9 +388,11 @@ public class Barajas {
         boolean validador = false;
         String[] escAux = new String[13];
         int contador = 0;
-
+        
         for (int i = 0; i < escaleraAux.length; i++) {
-
+            if (distributeCarts.length == 2) {
+                contador++;
+            }
             for (int j = 0; j < distributeCarts.length; j++) {
 
                 if (escaleraAux[i] == distributeCarts[j].getValorTexto()) {
@@ -385,8 +400,8 @@ public class Barajas {
 
                 }
             }
+        
         }
-
         for (int i = 0; i < escAux.length; i++) {
             if (escAux[i] != null) {
                 contador++;
@@ -422,61 +437,43 @@ public class Barajas {
     }
 
     public static boolean doblesParejas(Carta[] distributeCarts) {
-        String[] doblesParejasAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
         boolean validador = true;
+        int contador = 0;
 
-        for (int i = 0; i < doblesParejasAux.length; i++) {
-            for (int j = i + 2; j < distributeCarts.length; j++) {
-                if (doblesParejasAux[i] == distributeCarts[j].getValorTexto()) {
-                    return validador;
+        for (int i = 0; i < distributeCarts.length - 1; i++) {
 
-                } else {
-                    break;
+            for (int j = i + 1; j < distributeCarts.length; j++) {
+                if (distributeCarts[i].getValorTexto() == distributeCarts[j].getValorTexto()) {
+                    contador++;
+                    i = j + 1;
+                    j++;
                 }
             }
-            for (int j = i + 2; j < distributeCarts.length; j++) {
-                if (doblesParejasAux[i] == distributeCarts[j].getValorTexto()) {
-                    return validador;
-                } else {
-                    break;
-                }
-            }
+
         }
-
+        if (contador == 2 || contador == 3) {
+            System.out.println("Tienes una doble pareja");
+        } else {
+            validador = false;
+        }
         return validador;
     }
 
     public static boolean parejas(Carta[] distributeCarts) {
-        String[] parejasAux = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
         boolean validador = true;
-        String colorAux = "";
+        int contador = 0;
 
-        for (int i = 0; i < parejasAux.length; i++) {
-
-            if (validador) {
-
-                for (int j = 0; j < distributeCarts.length; j++) {
-
-                    if (parejasAux[i] == distributeCarts[j].getValorTexto()) {
-
-                        if (colorAux == "") {
-                            colorAux = distributeCarts[j].getColor();
-
-                            validador = true;
-                        } else {
-                            if (colorAux == distributeCarts[j].getColor()) {
-                                validador = true;
-
-                            } else {
-                                validador = false;
-                            }
-
-                        }
-                    }
+        for (int i = 0; i < distributeCarts.length; i++) {
+            for (int j = i + 1; j < distributeCarts.length; j++) {
+                if (distributeCarts[i].getValorTexto() == distributeCarts[j].getValorTexto()) {
+                    contador++;
                 }
-
-                System.out.println(validador);
             }
+        }
+        if (contador == 1) {
+            System.out.println("Tienes una pareja");
+        } else {
+            validador = false;
         }
         return validador;
     }
@@ -488,23 +485,24 @@ public class Barajas {
         int contador = 0;
 
         for (int i = 0; i < cartaAltaAux.length; i++) {
-
-            for(int j = 0; j < distributeCarts.length; j++) {
+            
+            for (int j = 0; j < distributeCarts.length; j++) {
 
                 if (cartaAltaAux[i] == distributeCarts[j].getValorTexto()) {
                     carAltAux[i] = cartaAltaAux[i];
-                    
-                }else{
+                    validador = true;
+                    System.out.println("Tienes una carta alta");
+                } else {
                     return validador;
                 }
 
             }
         }
-        
+
         for (int i = 0; i < carAltAux.length; i++) {
             if (carAltAux[i] != null) {
                 contador++;
-
+                
             } else {
                 contador = 0;
             }
@@ -515,7 +513,7 @@ public class Barajas {
             }
 
         }
-
+        
         return validador;
     }
 
